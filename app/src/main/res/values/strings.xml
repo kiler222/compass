@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Compass App</string>
+    <string name="distance_text">Distance from the destination: </string>
+    <string name="set_destination">Set destination</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    
+    <string name="apply_destination">Apply</string>
+    <string name="lat_hint">Enter latitude e.g. 23.5243</string>
+    <string name="long_hint">Enter longitude e.g. -6.2739</string>
+    <string name="input_error">Fields cannot be empty</string>
+    <string name="lat_error">Latitude should be between\n -90.0 and 90.0</string>
+    <string name="long_error">Longitude should be between\n -180.0 and 180.0</string>
+    <string name="destination_not_set">Destination not set yet</string>
+
+
+</resources>
