@@ -2,6 +2,7 @@ package com.kiler.compassapp
 
 
 import com.google.common.truth.Truth.assertThat
+import com.kiler.compassapp.view.SetDestination
 import org.junit.Test
 
 

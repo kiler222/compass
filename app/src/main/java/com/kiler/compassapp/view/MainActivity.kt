@@ -1,6 +1,7 @@
-package com.kiler.compassapp
+package com.kiler.compassapp.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.jakewharton.rxbinding2.view.RxView
+import com.kiler.compassapp.R
 import com.kiler.compassapp.data.LocationData
 import com.kiler.compassapp.utils.CheckSensors
 import com.kiler.compassapp.viewmodel.LocationViewModel
@@ -23,11 +25,11 @@ import kotlinx.android.synthetic.main.activity_main.destinationButton
 import kotlinx.android.synthetic.main.activity_main.textView
 import java.util.concurrent.TimeUnit
 
+
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = "PJmain"
     private lateinit var locationViewModel: LocationViewModel
-    val REQUEST_LOCATION = 200
+    private val REQUEST_LOCATION = 200
     private var destinationLatitude: Double? = null
     private var destinationLongitude: Double? = null
     private var azimuth: Float? = null
@@ -42,15 +44,9 @@ class MainActivity : AppCompatActivity() {
         if (CheckSensors(sensorManager!!)) {
             locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
             checkPermisionsAndUpdateLocation()
-
-
         } else {
             noSensorAlert()
         }
-
-
-
-
 
 
         destinationButton.setSafeOnClickListener {
@@ -70,7 +66,6 @@ class MainActivity : AppCompatActivity() {
                 if (resultCode == RESULT_OK) {
 
                     val bundle = data?.getBundleExtra("destinationData")
-
                     val destinationData = bundle?.getParcelable<LocationData>("destinationData")
                     destinationLatitude = destinationData?.latitude ?: 0.0
                     destinationLongitude = destinationData?.longitude ?: 0.0
@@ -81,6 +76,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("CheckResult")
     fun View.setSafeOnClickListener(onClick: (View) -> Unit) {
         RxView.clicks(this).throttleFirst(1000, TimeUnit.MILLISECONDS).subscribe {
             onClick(this)
@@ -94,29 +90,24 @@ class MainActivity : AppCompatActivity() {
 
             if (destinationLatitude == null || destinationLongitude == null) {
                 textView.text = getString(R.string.destination_not_set)
-
             } else {
                 updateDistance(it.latitude, it.longitude)
                 imageArrow.visibility = View.VISIBLE
             }
-
         })
 
         locationViewModel.getAzimuthData().observe( this, {
 
-            Log.e(TAG, "azymut mamy ${it.value}")
             imageCompass.rotation = -(it.value)
             if (azimuth != null) {
                 imageArrow.rotation = -(it.value) + azimuth!!
             }
-
-
         })
 
     }
 
     private fun updateDistance(latitude: Double, longitude: Double) {
-        var result = FloatArray(3)
+        val result = FloatArray(3)
 
         Location.distanceBetween(
             latitude,
@@ -126,19 +117,16 @@ class MainActivity : AppCompatActivity() {
             result
         )
 
-
-        var distance = ""
         val d = result[0].toInt()
 
-        if (d < 10000 ){
-            distance = " $d m"
+        val distance = if (d < 10000 ){
+            " $d m"
         } else {
-            distance = " ${d/1000} km"
+            " ${d/1000} km"
         }
 
-        textView.text = getString(R.string.distance_text) + distance
+        textView.text = getString(R.string.distance_text, distance)
         azimuth = result[1]
-
 
     }
 
@@ -172,11 +160,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun noSensorAlert() {
         val alertDialog = AlertDialog.Builder(this)
-        alertDialog.setMessage("Your device doesn't support a compass")
+        alertDialog.setMessage(getString(R.string.device_no_compass))
             .setCancelable(false)
-            .setNegativeButton("Close"){ _, _ -> finish()}
+            .setNegativeButton(getString(R.string.close)){ _, _ -> finish()}
         alertDialog.show()
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

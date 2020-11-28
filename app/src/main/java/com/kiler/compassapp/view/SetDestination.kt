@@ -1,5 +1,6 @@
-package com.kiler.compassapp
+package com.kiler.compassapp.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
+import com.kiler.compassapp.R
 import com.kiler.compassapp.data.LocationData
 import kotlinx.android.synthetic.main.activity_set_destination.*
 import java.util.concurrent.TimeUnit
@@ -16,7 +18,6 @@ import java.util.concurrent.TimeUnit
 
 class SetDestination : AppCompatActivity() {
 
-   // private val EMPTY_FIELD = -999.9f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,16 +28,10 @@ class SetDestination : AppCompatActivity() {
 
             hideKeyboard()
 
-
             val lat = latField.text.toString().takeUnless { it.isEmpty() } ?: ""
-            val long = longField.text.toString().takeUnless { it.isEmpty() } ?: ""   //as Float //?: EMPTY_FIELD    //.toString().takeUnless { it.isEmpty() } ?: ""
+            val long = longField.text.toString().takeUnless { it.isEmpty() } ?: ""
 
-            Log.e("PJ", "lat = ${lat}, long = $long")
-
-
-            val result = validateCoordinates(lat, long)
-
-            when (result) {
+            when (validateCoordinates(lat, long)) {
                 0 -> {
                     Toast.makeText(this, getString(R.string.input_error), Toast.LENGTH_LONG).show()
                 }
@@ -50,7 +45,7 @@ class SetDestination : AppCompatActivity() {
                     val resultIntent = Intent()
 
                     val destinationData = LocationData(long.toDouble(), lat.toDouble())
-                    var bundle = Bundle()
+                    val bundle = Bundle()
                     bundle.putParcelable("destinationData", destinationData)
                     resultIntent.putExtra("destinationData", bundle)
                     setResult(RESULT_OK, resultIntent)
@@ -58,13 +53,7 @@ class SetDestination : AppCompatActivity() {
                 }
             }
 
-
-
-
         }
-
-
-
 
     }
 
@@ -74,8 +63,8 @@ class SetDestination : AppCompatActivity() {
         var isCorrectLat = false
         var isCorrectLong = false
         var result = 0
-        var latitude: Float
-        var longitude: Float
+        val latitude: Float
+        val longitude: Float
 
         if (lat == "" || long == "") {
             result = 0
@@ -92,14 +81,12 @@ class SetDestination : AppCompatActivity() {
 
             }
 
-
             if ( -180.0f < longitude && longitude < 180.0f) {
                 isCorrectLong = true
             } else {
                 result = 2
                 isCorrectLong = false
             }
-
 
         }
 
@@ -111,7 +98,7 @@ class SetDestination : AppCompatActivity() {
 
 
 
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         val view = this.currentFocus
         if (view != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -121,6 +108,7 @@ class SetDestination : AppCompatActivity() {
     }
 
 
+    @SuppressLint("CheckResult")
     fun View.setSafeOnClickListener(onClick: (View) -> Unit) {
         RxView.clicks(this).throttleFirst(1000, TimeUnit.MILLISECONDS).subscribe {
             onClick(this)

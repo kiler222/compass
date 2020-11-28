@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center|top"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -16,7 +16,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/rounded_corners"
         android:elevation="5dp"
-        android:text="@string/distance_text"
+        android:text="@string/destination_not_set"
         android:textColor="@color/light_green"
         android:textStyle="bold" />
 

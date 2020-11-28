@@ -1,11 +1,9 @@
 package com.kiler.compassapp.data
 
-import android.Manifest
+
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -17,14 +15,11 @@ class LocationLiveData(context: Context) : LiveData<LocationData>() {
 
     private var fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-
-
     private fun setLocationData(location: Location) {
         value = LocationData(
             longitude = location.longitude,
             latitude = location.latitude
         )
-
     }
 
     private val locationCallback = object : LocationCallback() {
