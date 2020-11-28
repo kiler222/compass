@@ -23,6 +23,7 @@ import com.kiler.compassapp.viewmodel.LocationViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.destinationButton
 import kotlinx.android.synthetic.main.activity_main.textView
+import java.lang.Math.abs
 import java.util.concurrent.TimeUnit
 
 
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private var destinationLongitude: Double? = null
     private var azimuth: Float? = null
     private var sensorManager: SensorManager? = null
+    private var averageAzimuth: MutableList<Float> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,14 +94,16 @@ class MainActivity : AppCompatActivity() {
                 textView.text = getString(R.string.destination_not_set)
             } else {
                 updateDistance(it.latitude, it.longitude)
-                imageArrow.visibility = View.VISIBLE
+
             }
         })
 
         locationViewModel.getAzimuthData().observe( this, {
 
-            imageCompass.rotation = -(it.value)
+                imageCompass.rotation = -(it.value)
+
             if (azimuth != null) {
+                imageArrow.visibility = View.VISIBLE
                 imageArrow.rotation = -(it.value) + azimuth!!
             }
         })
@@ -126,7 +130,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         textView.text = getString(R.string.distance_text, distance)
-        azimuth = result[1]
+
+        if (averageAzimuth.isNullOrEmpty()) {
+            averageAzimuth = MutableList(5) {result[1]}
+        } else {
+            averageAzimuth.removeAt(0)
+            averageAzimuth.add(result[1])
+        }
+
+        azimuth = averageAzimuth.average().toFloat()
 
     }
 

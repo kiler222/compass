@@ -6,6 +6,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import androidx.lifecycle.LiveData
 
 
@@ -22,6 +23,7 @@ class AzimuthLiveData(context: Context) : LiveData<AzimuthData>(), SensorEventLi
     private var lastAccelerometerSet = false
     private var lastMagnetometer = FloatArray(3)
     private var lastMagnetometerSet = false
+    private var averageAzimuth: MutableList<Float> = mutableListOf()
 
 
     override fun onActive() {
@@ -74,6 +76,16 @@ class AzimuthLiveData(context: Context) : LiveData<AzimuthData>(), SensorEventLi
                 )[0].toDouble()
             )+360).toInt()%360).toFloat()
         }
+
+        if (averageAzimuth.isNullOrEmpty()) {
+            averageAzimuth = MutableList(5) {azimuth}
+        } else {
+            averageAzimuth.removeAt(0)
+            averageAzimuth.add(azimuth)
+        }
+
+        azimuth = averageAzimuth.average().toFloat()
+
         value = AzimuthData(azimuth)
     }
 
