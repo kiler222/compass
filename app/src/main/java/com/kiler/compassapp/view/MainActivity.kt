@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun startLocationUpdate() {
-        locationViewModel.getLocationData().observe(this, Observer {
+        locationViewModel.getLocationData().observe(this, {
 
             if (destinationLatitude == null || destinationLongitude == null) {
                 textView.text = getString(R.string.destination_not_set)
@@ -120,6 +120,8 @@ class MainActivity : AppCompatActivity() {
             destinationLongitude!!,
             result
         )
+
+
 
         val d = result[0].toInt()
 

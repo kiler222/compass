@@ -12,24 +12,30 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_corners"
         android:elevation="5dp"
+        android:maxLines="1"
         android:text="@string/destination_not_set"
+        android:textAlignment="center"
         android:textColor="@color/light_green"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/box"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/imageCompass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,14 +46,13 @@
             android:id="@+id/imageArrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/imageCompass"
             app:layout_constraintEnd_toEndOf="@+id/imageCompass"
             app:layout_constraintStart_toStartOf="@+id/imageCompass"
             app:layout_constraintTop_toTopOf="@+id/imageCompass"
-            app:srcCompat="@drawable/arrow_color" />
+            app:srcCompat="@drawable/arrow_color"
+            tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,9 +60,9 @@
         android:id="@+id/destinationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="32dp"
         android:text="@string/set_destination"
-        android:textSize="10sp" />
+        android:textSize="12sp" />
 
 </LinearLayout>
